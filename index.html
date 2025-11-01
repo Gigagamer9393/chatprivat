@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Live Chat Lila Style</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<style>
+body {
+  font-family: 'Roboto', sans-serif;
+  margin:0;
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background: linear-gradient(135deg, #6a0dad, #c08ef9);
+  color:white;
+}
+.container {
+  width: 480px;
+  max-width:95%;
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(20px);
+  border-radius: 25px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+  padding: 30px;
+}
+h2 { text-align:center; margin-bottom:20px; color:#f0e5ff; font-weight:700; }
+input, button { font-family:'Roboto', sans-serif; font-weight:500; }
+input {
+  width:100%; padding:15px; margin:6px 0; border:none;
+  border-radius:14px; background: rgba(255,255,255,0.2); color:white;
+}
+input::placeholder { color: rgba(255,255,255,0.75); font-size:1.1em; }
+input:focus { outline:none; box-shadow:0 0 12px rgba(255,255,255,0.5); }
+button {
+  border-radius:14px; background:#9b59b6; color:white; font-weight:bold;
+  cursor:pointer; transition:0.3s;
+}
+button:hover { background:#8e44ad; }
+p { text-align:center; font-size:0.9em; }
+a { color:#f1c40f; cursor:pointer; text-decoration:none; }
+a:hover { text-decoration:underline; }
+
+/* Chat */
+#chatArea { display:none; flex-direction:column; }
+#messages {
+  border:1px solid rgba(255,255,255,0.2);
+  padding:12px;
+  height:320px;
+  overflow-y:auto;
+  border-radius:14px;
+  margin-bottom:12px;
+  background: rgba(255,255,255,0.05);
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  scroll-behavior:smooth;
+}
+.message-wrapper {
+  display:flex;
+  align-items:flex-start;
+  gap:6px;
+}
+.message {
+  padding:12px 16px;
+  border-radius:20px;
+  max-width:75%;
+  word-wrap: break-word;
+  font-size:1.05em;
+  line-height:1.4em;
+  transition:0.3s all ease;
+  opacity:0;
+  transform:scale(0.8);
+}
+.message.show { opacity:1; transform:scale(1); }
+
+.message.own { background:#9b59b6; color:white; box-shadow:0 4px 12px rgba(0,0,0,0.3);}
+.message.other { background: rgba(255,255,255,0.15); color:white; box-shadow:0 2px 6px rgba(0,0,0,0.15);}
+.delBtn, .updateBtn {
+  border:none;
+  cursor:pointer;
+  font-size:0.85em;
+  padding:6px 10px;
+  border-radius:8px;
+  font-weight:bold;
+  flex-shrink:0;
+}
+.delBtn { background:#e74c3c; color:white; }
+.delBtn:hover { background:#c0392b; }
+.updateBtn { background:#3498db; color:white; }
+.updateBtn:hover { background:#2980b9; }
+
+#form { display: flex; gap: 6px; align-items: center; }
+#text {
+  flex: 1;
+  border-radius: 14px;
+  padding: 15px;
+  font-size: 1.1em;
+  color: white;
+  background: rgba(255,255,255,0.2);
+  border: none;
+}
+#text::placeholder { color: rgba(255,255,255,0.75); font-size: 1.1em; }
+#send { padding: 15px 24px; font-size: 1em; flex-shrink: 0; min-width: 100px; }
+
+#smilies { display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap; }
+.smiley { cursor:pointer; transition:0.3s; font-size:1.3em; }
+.smiley:hover { transform:scale(1.4) rotate(-5deg); }
+
+#deleteAllBtn, #refreshBtn, #soundToggleBtn {
+  padding:12px; font-size:1em; font-weight:bold; margin-bottom:10px;
+}
+#deleteAllBtn { background:#e67e22; }
+#deleteAllBtn:hover { background:#d35400; }
+#refreshBtn { background:#16a085; }
+#refreshBtn:hover { background:#138d75; }
+#soundToggleBtn { background:#f39c12; }
+#soundToggleBtn:hover { background:#d68910; }
+
+#logoutBtn { margin-top:12px; padding:14px; font-size:1em; font-weight:bold; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div id="authArea">
+    <h2>Live Chat Login</h2>
+    <input type="text" id="nickname" placeholder="Chatname"/>
+    <input type="email" id="email" placeholder="Email"/>
+    <input type="password" id="password" placeholder="Passwort"/>
+    <button id="loginBtn">Anmelden</button>
+    <button id="registerBtn">Registrieren</button>
+    <p><a id="resetPassword">Passwort vergessen?</a></p>
+    <div id="status"></div>
+  </div>
+
+  <div id="chatArea">
+    <h2>Willkommen, <span id="userName"></span>!</h2>
+    <button id="refreshBtn">Chat aktualisieren</button>
+    <button id="deleteAllBtn">Alle Chatnachrichten löschen</button>
+    <button id="soundToggleBtn">Sound: AN</button>
+    <div id="messages"></div>
+    <div id="smilies">
+      <span class="smiley">😀</span>
+      <span class="smiley">😂</span>
+      <span class="smiley">😍</span>
+      <span class="smiley">😎</span>
+      <span class="smiley">😢</span>
+    </div>
+    <div id="form">
+      <input id="text" placeholder="Nachricht eingeben..."/>
+      <button id="send">Senden</button>
+    </div>
+    <button id="logoutBtn">Abmelden</button>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js";
+import { getDatabase, ref, push, onChildAdded, remove, set, get } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-database.js";
+
+// ======= FIREBASE KONFIG =======
+const firebaseConfig = {
+  apiKey: "AIzaSyAjj7CGTPWgXYIaCZpLT6O46SOAQ_ptZ7g",
+  authDomain: "live-chat-test-a67b8.firebaseapp.com",
+  databaseURL: "https://live-chat-test-a67b8-default-rtdb.firebaseio.com",
+  projectId: "live-chat-test-a67b8",
+  storageBucket: "live-chat-test-a67b8.firebasestorage.app",
+  messagingSenderId: "244677510641",
+  appId: "1:244677510641:web:b397529ae31887f9dbb050"
+};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getDatabase(app);
+const messagesRef = ref(db, 'messages');
+
+// ======= DOM ELEMENTE =======
+const authArea = document.getElementById('authArea');
+const chatArea = document.getElementById('chatArea');
+const nicknameInput = document.getElementById('nickname');
+const emailInput = document.getElementById('email');
+const passwordInput = document.getElementById('password');
+const loginBtn = document.getElementById('loginBtn');
+const registerBtn = document.getElementById('registerBtn');
+const resetLink = document.getElementById('resetPassword');
+const status = document.getElementById('status');
+const messagesDiv = document.getElementById('messages');
+const textInput = document.getElementById('text');
+const sendBtn = document.getElementById('send');
+const logoutBtn = document.getElementById('logoutBtn');
+const userNameSpan = document.getElementById('userName');
+const smiliesDiv = document.getElementById('smilies');
+const deleteAllBtn = document.getElementById('deleteAllBtn');
+const refreshBtn = document.getElementById('refreshBtn');
+const soundToggleBtn = document.getElementById('soundToggleBtn');
+
+// ======= SOUND =======
+const sendSound = new Audio('send.mp3');       // eigene Nachricht
+const receiveSound = new Audio('receive.mp3'); // andere Nachrichten
+let soundOn = true;
+soundToggleBtn.onclick = () => {
+  soundOn = !soundOn;
+  soundToggleBtn.innerText = `Sound: ${soundOn ? "AN":"AUS"}`;
+}
+
+// ======= LOGIN & REG =======
+registerBtn.onclick = () => {
+  const email = emailInput.value.trim();
+  const pass = passwordInput.value;
+  const nickname = nicknameInput.value.trim();
+  if(!nickname){ status.innerText="Bitte Nickname eingeben"; return; }
+  if(!email || !pass){ status.innerText="Email und Passwort eingeben"; return; }
+
+  createUserWithEmailAndPassword(auth,email,pass)
+    .then(userCred => { localStorage.setItem('nickname', nickname); status.innerText=''; })
+    .catch(err => status.innerText = err.message);
+}
+
+loginBtn.onclick = () => {
+  const email = emailInput.value.trim();
+  const pass = passwordInput.value;
+  const nickname = nicknameInput.value.trim();
+  if(!nickname){ status.innerText="Bitte Nickname eingeben"; return; }
+  if(!email || !pass){ status.innerText="Email und Passwort eingeben"; return; }
+
+  signInWithEmailAndPassword(auth,email,pass)
+    .then(userCred => { localStorage.setItem('nickname', nickname); status.innerText=''; })
+    .catch(err => status.innerText = err.message);
+}
+
+// Passwort zurücksetzen
+resetLink.onclick = () => {
+  const email = emailInput.value.trim();
+  if(!email){ status.innerText="Email eingeben"; return; }
+  sendPasswordResetEmail(auth,email)
+    .then(()=>status.innerText="Passwort-Zurücksetzungsmail gesendet")
+    .catch(err=>status.innerText=err.message);
+}
+
+// Logout
+logoutBtn.onclick = () => { signOut(auth); }
+
+// ======= AUTH STATUS =======
+onAuthStateChanged(auth,user=>{
+  if(user){
+    authArea.style.display='none';
+    chatArea.style.display='flex';
+    const nickname = localStorage.getItem('nickname') || "Unbekannt";
+    userNameSpan.innerText = nickname;
+    loadMessages();
+  }else{
+    authArea.style.display='block';
+    chatArea.style.display='none';
+    messagesDiv.innerHTML='';
+  }
+});
+
+// ======= NACHRICHTEN =======
+sendBtn.onclick = sendMessage;
+textInput.addEventListener('keydown', e=>{ if(e.key==='Enter') sendMessage(); });
+
+function sendMessage() {
+  const text = textInput.value.trim();
+  if(!text) return;
+  const nickname = localStorage.getItem('nickname') || "Unbekannt";
+
+  if(soundOn){
+    sendSound.currentTime = 0;
+    sendSound.play();
+  }
+
+  push(messagesRef,{ name:nickname, text, ts:Date.now() });
+  textInput.value='';
+}
+
+// Nachrichten laden
+function loadMessages() {
+  messagesDiv.innerHTML = '';
+  get(messagesRef).then(snapshot => {
+    if(snapshot.exists()){
+      const data = snapshot.val();
+      Object.entries(data).sort((a,b)=>a[1].ts-b[1].ts).forEach(([key,msg])=>{
+        const nickname = localStorage.getItem('nickname') || "Unbekannt";
+        const wrapper = document.createElement('div');
+        wrapper.className = "message-wrapper";
+
+        const div = document.createElement('div');
+        div.classList.add('message');
+        div.classList.add(nickname===msg.name?'own':'other');
+        div.innerHTML = `<strong>${msg.name}</strong>: ${msg.text}`;
+        wrapper.appendChild(div);
+
+        if(nickname === msg.name){
+          const delBtn = document.createElement('button');
+          delBtn.className="delBtn";
+          delBtn.innerText="Löschen";
+          delBtn.onclick = ()=>remove(ref(db,'messages/'+key)).then(()=>wrapper.remove());
+          wrapper.appendChild(delBtn);
+        } else if(soundOn){
+          receiveSound.currentTime = 0;
+          receiveSound.play();
+        }
+
+        messagesDiv.appendChild(wrapper);
+        setTimeout(()=>div.classList.add('show'),50);
+      });
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+  });
+}
+
+// Live-Update + Refresh
+onChildAdded(messagesRef, loadMessages);
+refreshBtn.onclick = loadMessages;
+
+// Smilies
+smiliesDiv.querySelectorAll('.smiley').forEach(s=>{
+  s.onclick = () => { textInput.value += s.innerText; textInput.focus(); }
+});
+
+// Alle Nachrichten löschen
+deleteAllBtn.onclick = () => {
+  if(confirm("Alle Nachrichten wirklich löschen?")) set(messagesRef, null);
+}
+</script>
+</body>
+</html>
