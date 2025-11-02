@@ -2,9 +2,10 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>Live Chat Lila Style</title>
+<title>GigarazorLp-Shadow-Black-Chat</title>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 <style>
+/* ===== BODY & BACKGROUND ===== */
 body {
   font-family: 'Roboto', sans-serif;
   margin:0;
@@ -12,112 +13,118 @@ body {
   display:flex;
   justify-content:center;
   align-items:center;
-  background: linear-gradient(135deg, #6a0dad, #c08ef9);
-  color:white;
+  background: linear-gradient(-45deg,#0ff,#f0f,#8e44ad,#16a085);
+  background-size: 400% 400%;
+  animation: gradientBG 15s ease infinite;
+  color:#fff;
+  overflow:hidden;
 }
+@keyframes gradientBG {
+  0%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+  100%{background-position:0% 50%;}
+}
+
+/* ===== CONTAINER ===== */
 .container {
-  width: 480px;
+  width: 550px;
   max-width:95%;
-  background: rgba(255,255,255,0.05);
-  backdrop-filter: blur(20px);
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(30px);
   border-radius: 25px;
-  box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+  box-shadow: 0 0 30px #0ff, 0 0 60px #f0f;
   padding: 30px;
 }
-h2 { text-align:center; margin-bottom:20px; color:#f0e5ff; font-weight:700; }
+
+/* ===== HEADINGS ===== */
+h2 {
+  text-align:center;
+  margin-bottom:20px;
+  color:#0ff;
+  font-weight:700;
+  text-shadow: 0 0 8px #0ff, 0 0 16px #f0f;
+}
+
+/* ===== INPUT & BUTTONS ===== */
 input, button { font-family:'Roboto', sans-serif; font-weight:500; }
 input {
   width:100%; padding:15px; margin:6px 0; border:none;
-  border-radius:14px; background: rgba(255,255,255,0.2); color:white;
+  border-radius:14px; background: rgba(255,255,255,0.05); color:white;
+  box-shadow: 0 0 6px #0ff inset, 0 0 12px #f0f inset; transition:0.3s;
 }
-input::placeholder { color: rgba(255,255,255,0.75); font-size:1.1em; }
-input:focus { outline:none; box-shadow:0 0 12px rgba(255,255,255,0.5); }
-button {
-  border-radius:14px; background:#9b59b6; color:white; font-weight:bold;
-  cursor:pointer; transition:0.3s;
-}
-button:hover { background:#8e44ad; }
-p { text-align:center; font-size:0.9em; }
-a { color:#f1c40f; cursor:pointer; text-decoration:none; }
-a:hover { text-decoration:underline; }
+input::placeholder { color: rgba(255,255,255,0.5); font-size:1.1em; }
+input:focus { outline:none; box-shadow:0 0 12px #0ff, 0 0 20px #f0f; }
 
-/* Chat */
+button {
+  border-radius:14px; background: linear-gradient(45deg,#9b59b6,#8e44ad);
+  color:white; font-weight:bold; cursor:pointer; transition:0.3s;
+  box-shadow: 0 0 8px #0ff, 0 0 16px #f0f;
+}
+button:hover {
+  background: linear-gradient(45deg,#8e44ad,#9b59b6);
+  box-shadow: 0 0 12px #0ff, 0 0 24px #f0f;
+}
+
+/* ===== CHAT AREA ===== */
 #chatArea { display:none; flex-direction:column; }
 #messages {
   border:1px solid rgba(255,255,255,0.2);
-  padding:12px;
-  height:320px;
-  overflow-y:auto;
-  border-radius:14px;
-  margin-bottom:12px;
-  background: rgba(255,255,255,0.05);
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-  scroll-behavior:smooth;
+  padding:12px; height:320px; overflow-y:auto;
+  border-radius:14px; margin-bottom:12px; background: rgba(0,0,0,0.2);
+  display:flex; flex-direction:column; gap:12px; scroll-behavior:smooth;
 }
-.message-wrapper {
-  display:flex;
-  align-items:flex-start;
-  gap:6px;
-}
+
+/* ===== MESSAGES ===== */
+.message-wrapper { display:flex; align-items:flex-start; gap:6px; }
 .message {
-  padding:12px 16px;
-  border-radius:20px;
-  max-width:75%;
-  word-wrap: break-word;
-  font-size:1.05em;
-  line-height:1.4em;
-  transition:0.3s all ease;
-  opacity:0;
-  transform:scale(0.8);
+  padding:12px 16px; border-radius:20px; max-width:75%;
+  word-wrap: break-word; font-size:1.05em; line-height:1.4em;
+  transition:0.3s all ease; opacity:0; transform:scale(0.8);
+  text-shadow: 0 0 4px #0ff, 0 0 8px #f0f;
 }
-.message.show { opacity:1; transform:scale(1); }
-
-.message.own { background:#9b59b6; color:white; box-shadow:0 4px 12px rgba(0,0,0,0.3);}
-.message.other { background: rgba(255,255,255,0.15); color:white; box-shadow:0 2px 6px rgba(0,0,0,0.15);}
-.delBtn, .updateBtn {
-  border:none;
-  cursor:pointer;
-  font-size:0.85em;
-  padding:6px 10px;
-  border-radius:8px;
-  font-weight:bold;
-  flex-shrink:0;
+.message.show { opacity:1; transform:scale(1); animation: flashGlow 0.6s ease; }
+@keyframes flashGlow {
+  0% { box-shadow: 0 0 0 #0ff; }
+  50% { box-shadow: 0 0 20px #0ff,0 0 40px #f0f; }
+  100% { box-shadow:0 0 0 #0ff; }
 }
-.delBtn { background:#e74c3c; color:white; }
-.delBtn:hover { background:#c0392b; }
-.updateBtn { background:#3498db; color:white; }
-.updateBtn:hover { background:#2980b9; }
+.message.own { background: #9b59b6; color:white; box-shadow:0 0 10px #f0f, 0 0 20px #9b59b6;}
+.message.other { background: rgba(255,255,255,0.1); color:white; box-shadow:0 0 6px #0ff,0 0 12px #f0f;}
 
+/* ===== FORM ===== */
 #form { display: flex; gap: 6px; align-items: center; }
-#text {
-  flex: 1;
-  border-radius: 14px;
-  padding: 15px;
-  font-size: 1.1em;
-  color: white;
-  background: rgba(255,255,255,0.2);
-  border: none;
+#text { flex:1; border-radius:14px; padding:15px; font-size:1.1em; color:white; background: rgba(0,0,0,0.2); border:none; box-shadow: 0 0 6px #0ff inset, 0 0 12px #f0f inset; transition:0.3s;}
+#text::placeholder { color: rgba(255,255,255,0.5); font-size:1.1em; }
+#send { padding:15px 24px; font-size:1em; flex-shrink:0; min-width:100px; }
+
+/* ===== SMILIES ===== */
+#smilies { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px; }
+.smiley {
+  cursor:pointer; font-size:1.7em; transition:0.3s;
+  text-shadow:0 0 6px #0ff,0 0 12px #f0f;
+  display:inline-block;
 }
-#text::placeholder { color: rgba(255,255,255,0.75); font-size: 1.1em; }
-#send { padding: 15px 24px; font-size: 1em; flex-shrink: 0; min-width: 100px; }
+.smiley:hover {
+  transform: scale(1.5) rotate(-10deg);
+  text-shadow: 0 0 12px #0ff,0 0 24px #f0f;
+}
+.smiley.flash { animation: flashGlow 0.5s ease; }
 
-#smilies { display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap; }
-.smiley { cursor:pointer; transition:0.3s; font-size:1.3em; }
-.smiley:hover { transform:scale(1.4) rotate(-5deg); }
-
-#deleteAllBtn, #refreshBtn, #soundToggleBtn {
+/* ===== SPECIAL BUTTONS ===== */
+#deleteAllBtn, #refreshBtn, #soundToggleBtn, #logoutBtn {
   padding:12px; font-size:1em; font-weight:bold; margin-bottom:10px;
+  border:none; border-radius:14px; cursor:pointer; color:#fff;
+  text-shadow: 0 0 6px #0ff,0 0 12px #f0f; transition:0.3s;
 }
-#deleteAllBtn { background:#e67e22; }
-#deleteAllBtn:hover { background:#d35400; }
-#refreshBtn { background:#16a085; }
-#refreshBtn:hover { background:#138d75; }
-#soundToggleBtn { background:#f39c12; }
-#soundToggleBtn:hover { background:#d68910; }
+#deleteAllBtn { background:#e67e22; } #deleteAllBtn:hover { background:#d35400; }
+#refreshBtn { background:#16a085; } #refreshBtn:hover { background:#138d75; }
+#soundToggleBtn { background:#f39c12; } #soundToggleBtn:hover { background:#d68910; }
+#logoutBtn { background:#9b59b6; } #logoutBtn:hover { background:#8e44ad; }
 
-#logoutBtn { margin-top:12px; padding:14px; font-size:1em; font-weight:bold; }
+/* ===== SCROLLBAR ===== */
+#messages::-webkit-scrollbar { width:10px; }
+#messages::-webkit-scrollbar-thumb { background: #0ff; border-radius: 5px; }
+#messages::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); }
 </style>
 </head>
 <body>
@@ -139,13 +146,17 @@ a:hover { text-decoration:underline; }
     <button id="deleteAllBtn">Alle Chatnachrichten löschen</button>
     <button id="soundToggleBtn">Sound: AN</button>
     <div id="messages"></div>
+
     <div id="smilies">
-      <span class="smiley">😀</span>
-      <span class="smiley">😂</span>
-      <span class="smiley">😍</span>
-      <span class="smiley">😎</span>
-      <span class="smiley">😢</span>
+      <span class="smiley">😀</span><span class="smiley">😁</span><span class="smiley">😂</span><span class="smiley">🤣</span>
+      <span class="smiley">😍</span><span class="smiley">😘</span><span class="smiley">😜</span><span class="smiley">😎</span>
+      <span class="smiley">🥳</span><span class="smiley">🥰</span><span class="smiley">😭</span><span class="smiley">😡</span>
+      <span class="smiley">🤔</span><span class="smiley">🙄</span><span class="smiley">😏</span><span class="smiley">🤩</span>
+      <span class="smiley">🐶</span><span class="smiley">🐱</span><span class="smiley">🦄</span><span class="smiley">🐸</span>
+      <span class="smiley">🍕</span><span class="smiley">🍔</span><span class="smiley">🍟</span><span class="smiley">🌭</span>
+      <span class="smiley">🎉</span><span class="smiley">💎</span><span class="smiley">⚡</span><span class="smiley">🌈</span>
     </div>
+
     <div id="form">
       <input id="text" placeholder="Nachricht eingeben..."/>
       <button id="send">Senden</button>
@@ -159,7 +170,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebas
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js";
 import { getDatabase, ref, push, onChildAdded, remove, set, get } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-database.js";
 
-// ======= FIREBASE KONFIG =======
+// ===== FIREBASE =====
 const firebaseConfig = {
   apiKey: "AIzaSyAjj7CGTPWgXYIaCZpLT6O46SOAQ_ptZ7g",
   authDomain: "live-chat-test-a67b8.firebaseapp.com",
@@ -172,9 +183,9 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
-const messagesRef = ref(db, 'messages');
+const messagesRef = ref(db,'messages');
 
-// ======= DOM ELEMENTE =======
+// ===== DOM ELEMENTE =====
 const authArea = document.getElementById('authArea');
 const chatArea = document.getElementById('chatArea');
 const nicknameInput = document.getElementById('nickname');
@@ -194,111 +205,118 @@ const deleteAllBtn = document.getElementById('deleteAllBtn');
 const refreshBtn = document.getElementById('refreshBtn');
 const soundToggleBtn = document.getElementById('soundToggleBtn');
 
-// ======= SOUND =======
-const sendSound = new Audio('send.mp3');       // eigene Nachricht
-const receiveSound = new Audio('receive.mp3'); // andere Nachrichten
+// ===== SOUND =====
+const sendSound = new Audio('send.mp3');
+const receiveSound = new Audio('receive.mp3');
 let soundOn = true;
-soundToggleBtn.onclick = () => {
-  soundOn = !soundOn;
-  soundToggleBtn.innerText = `Sound: ${soundOn ? "AN":"AUS"}`;
+soundToggleBtn.onclick = ()=>{ soundOn = !soundOn; soundToggleBtn.innerText = `Sound: ${soundOn ? "AN":"AUS"}`; }
+
+// ===== HELPER: Klartext-Fehler =====
+function firebaseErrorMessage(code){
+  switch(code){
+    case 'auth/invalid-email': return 'Ungültige Email-Adresse.';
+    case 'auth/user-disabled': return 'Dieser Benutzer wurde deaktiviert.';
+    case 'auth/user-not-found': return 'Kein Benutzer mit dieser Email gefunden.';
+    case 'auth/wrong-password': return 'Falsches Passwort.';
+    case 'auth/email-already-in-use': return 'Diese Email ist bereits registriert.';
+    case 'auth/weak-password': return 'Das Passwort ist zu schwach (mind. 6 Zeichen).';
+    case 'auth/invalid-login-credentials': return 'Falsche Login-Daten.';
+    case 'auth/missing-email': return 'Bitte Email eingeben.';
+    default: return 'Unbekannter Fehler: '+code;
+  }
 }
 
-// ======= LOGIN & REG =======
+// ===== REGISTER =====
 registerBtn.onclick = () => {
   const email = emailInput.value.trim();
   const pass = passwordInput.value;
   const nickname = nicknameInput.value.trim();
   if(!nickname){ status.innerText="Bitte Nickname eingeben"; return; }
-  if(!email || !pass){ status.innerText="Email und Passwort eingeben"; return; }
+  if(!email||!pass){ status.innerText="Email und Passwort eingeben"; return; }
 
   createUserWithEmailAndPassword(auth,email,pass)
-    .then(userCred => { localStorage.setItem('nickname', nickname); status.innerText=''; })
-    .catch(err => status.innerText = err.message);
+    .then(()=>{ localStorage.setItem('nickname',nickname); status.innerText='Registrierung erfolgreich!'; })
+    .catch(err=>status.innerText=firebaseErrorMessage(err.code));
 }
 
+// ===== LOGIN =====
 loginBtn.onclick = () => {
   const email = emailInput.value.trim();
   const pass = passwordInput.value;
   const nickname = nicknameInput.value.trim();
   if(!nickname){ status.innerText="Bitte Nickname eingeben"; return; }
-  if(!email || !pass){ status.innerText="Email und Passwort eingeben"; return; }
+  if(!email||!pass){ status.innerText="Email und Passwort eingeben"; return; }
 
   signInWithEmailAndPassword(auth,email,pass)
-    .then(userCred => { localStorage.setItem('nickname', nickname); status.innerText=''; })
-    .catch(err => status.innerText = err.message);
+    .then(()=>{ localStorage.setItem('nickname',nickname); status.innerText='Login erfolgreich!'; })
+    .catch(err=>status.innerText=firebaseErrorMessage(err.code));
 }
 
-// Passwort zurücksetzen
+// ===== PASSWORD RESET =====
 resetLink.onclick = () => {
   const email = emailInput.value.trim();
-  if(!email){ status.innerText="Email eingeben"; return; }
+  if(!email){ status.innerText="Bitte Email eingeben"; return; }
+
   sendPasswordResetEmail(auth,email)
-    .then(()=>status.innerText="Passwort-Zurücksetzungsmail gesendet")
-    .catch(err=>status.innerText=err.message);
+    .then(()=>status.innerText="Passwort-Zurücksetzungsmail gesendet.")
+    .catch(err=>status.innerText=firebaseErrorMessage(err.code));
 }
 
-// Logout
-logoutBtn.onclick = () => { signOut(auth); }
+// ===== LOGOUT =====
+logoutBtn.onclick = ()=>signOut(auth);
 
-// ======= AUTH STATUS =======
+// ===== AUTH STATE =====
 onAuthStateChanged(auth,user=>{
   if(user){
     authArea.style.display='none';
     chatArea.style.display='flex';
-    const nickname = localStorage.getItem('nickname') || "Unbekannt";
-    userNameSpan.innerText = nickname;
+    userNameSpan.innerText = localStorage.getItem('nickname') || "Unbekannt";
     loadMessages();
-  }else{
+  } else {
     authArea.style.display='block';
     chatArea.style.display='none';
     messagesDiv.innerHTML='';
   }
 });
 
-// ======= NACHRICHTEN =======
+// ===== SEND MESSAGE =====
 sendBtn.onclick = sendMessage;
-textInput.addEventListener('keydown', e=>{ if(e.key==='Enter') sendMessage(); });
+textInput.addEventListener('keydown',e=>{ if(e.key==='Enter') sendMessage(); });
 
-function sendMessage() {
+function sendMessage(){
   const text = textInput.value.trim();
   if(!text) return;
   const nickname = localStorage.getItem('nickname') || "Unbekannt";
 
-  if(soundOn){
-    sendSound.currentTime = 0;
-    sendSound.play();
-  }
-
-  push(messagesRef,{ name:nickname, text, ts:Date.now() });
+  if(soundOn){ sendSound.currentTime=0; sendSound.play(); }
+  push(messagesRef,{name:nickname,text,ts:Date.now()});
   textInput.value='';
 }
 
-// Nachrichten laden
-function loadMessages() {
-  messagesDiv.innerHTML = '';
-  get(messagesRef).then(snapshot => {
+// ===== LOAD MESSAGES =====
+function loadMessages(){
+  messagesDiv.innerHTML='';
+  get(messagesRef).then(snapshot=>{
     if(snapshot.exists()){
       const data = snapshot.val();
       Object.entries(data).sort((a,b)=>a[1].ts-b[1].ts).forEach(([key,msg])=>{
         const nickname = localStorage.getItem('nickname') || "Unbekannt";
         const wrapper = document.createElement('div');
-        wrapper.className = "message-wrapper";
+        wrapper.className="message-wrapper";
 
         const div = document.createElement('div');
-        div.classList.add('message');
-        div.classList.add(nickname===msg.name?'own':'other');
+        div.classList.add('message', nickname===msg.name?'own':'other');
         div.innerHTML = `<strong>${msg.name}</strong>: ${msg.text}`;
         wrapper.appendChild(div);
 
-        if(nickname === msg.name){
+        if(nickname===msg.name){
           const delBtn = document.createElement('button');
           delBtn.className="delBtn";
           delBtn.innerText="Löschen";
           delBtn.onclick = ()=>remove(ref(db,'messages/'+key)).then(()=>wrapper.remove());
           wrapper.appendChild(delBtn);
         } else if(soundOn){
-          receiveSound.currentTime = 0;
-          receiveSound.play();
+          receiveSound.currentTime=0; receiveSound.play();
         }
 
         messagesDiv.appendChild(wrapper);
@@ -308,20 +326,19 @@ function loadMessages() {
     }
   });
 }
+onChildAdded(messagesRef,loadMessages);
+refreshBtn.onclick=loadMessages;
+deleteAllBtn.onclick=()=>{ if(confirm("Alle Nachrichten wirklich löschen?")) set(messagesRef,null); }
 
-// Live-Update + Refresh
-onChildAdded(messagesRef, loadMessages);
-refreshBtn.onclick = loadMessages;
-
-// Smilies
+// ===== SMILIES CLICK =====
 smiliesDiv.querySelectorAll('.smiley').forEach(s=>{
-  s.onclick = () => { textInput.value += s.innerText; textInput.focus(); }
+  s.onclick=()=>{
+    textInput.value += s.innerText;
+    s.classList.add('flash');
+    setTimeout(()=>s.classList.remove('flash'),500);
+    textInput.focus();
+  }
 });
-
-// Alle Nachrichten löschen
-deleteAllBtn.onclick = () => {
-  if(confirm("Alle Nachrichten wirklich löschen?")) set(messagesRef, null);
-}
 </script>
 </body>
 </html>
